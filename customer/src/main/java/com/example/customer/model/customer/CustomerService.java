@@ -1,5 +1,7 @@
 package com.example.customer.model.customer;
 
+import com.example.core.exception_handler.ApiException;
+import com.example.core.exception_handler.ResponseStatus;
 import com.example.customer.model.customer.dto.CustomerRequest;
 import com.example.customer.model.customer.dto.CustomerResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +31,12 @@ public class CustomerService {
     public CustomerResponse getCustomer(String id) {
         return customerRepository.findById(id)
                 .map(Mapper::fromCustomer)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new ApiException(ResponseStatus.CUSTOMER_NOT_FOUND));
     }
 
     public String updateCustomer(String id, CustomerRequest request) {
         Customer customer = customerRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+            .orElseThrow(() -> new ApiException(ResponseStatus.CUSTOMER_NOT_FOUND));
 
         return customerRepository.save(toCustomer(request, customer)).getId();
     }
